@@ -1,12 +1,12 @@
-from core.time import DeltaTime
 import pygame
 
 from math import sin
 
+from game.data import GameMode
+from core.time import DeltaTime
 from core.entity import SimpleEntity
 from core.maths import Vector2
 from core.data import PygameSurface
-from game.data import GameMode
 
 class Player(SimpleEntity):
     def __init__(self, pos, frames):
@@ -37,7 +37,7 @@ class Player(SimpleEntity):
     def process(self):
         pass
 
-    def process_extra(self, deltatime, state):
+    def process_extra(self, state):
         self.jump_counter += 1
 
         # MOVEMENT ###########################
@@ -46,9 +46,9 @@ class Player(SimpleEntity):
 
         if state.game_mode == GameMode.START:
             self.speed.y = 0
-            self.pos.y += sin(state.turn_timer / 8)
+            self.pos.y += sin(state.turn_timer / 8) * DeltaTime.get()
         else:
-            self.speed.y += state.config.gravity * deltatime.get()
+            self.speed.y += state.config.gravity * DeltaTime.get()
 
         # cap the Y speed if the player goes through the top of the screen
         if self.pos.y < 0:
